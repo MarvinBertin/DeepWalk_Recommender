@@ -1,0 +1,287 @@
+{
+  "paragraphs": [
+    {
+      "text": "%dep\nz.reset() // clean up previously added artifact and repository\n\n// add maven repository\nz.addRepo(\"nexus-releases\").url(\"http://oss.sonatype.org/service/local/staging/deploy/maven2/\")\nz.addRepo(\"sonatype-nexus-snapshots\").url(\"https://oss.sonatype.org/content/repositories/snapshots\").snapshot()\n\nz.load(\"org.nd4j:nd4j-x86:0.4-rc3.8\")\nz.load(\"org.nd4j:nd4s_2.11:0.4-rc3.8\")\nz.load(\"org.deeplearning4j:deeplearning4j-core:0.4-rc3.8\")\nz.load(\"org.deeplearning4j:deeplearning4j-ui:0.4-rc3.8\")",
+      "dateUpdated": "Jan 24, 2016 2:31:13 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453674118884_-447679590",
+      "id": "20160124-142158_1451938882",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res0: org.apache.zeppelin.dep.Dependency \u003d org.apache.zeppelin.dep.Dependency@4dc3ab2c\n"
+      },
+      "dateCreated": "Jan 24, 2016 2:21:58 PM",
+      "dateStarted": "Jan 24, 2016 2:31:13 PM",
+      "dateFinished": "Jan 24, 2016 2:31:27 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import java.io.File\n\nimport scala.io.Source\n\nimport org.apache.log4j.Logger\nimport org.apache.log4j.Level\n\nimport org.apache.spark.SparkConf\nimport org.apache.spark.SparkContext\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\nimport org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationModel}",
+      "dateUpdated": "Jan 24, 2016 4:46:02 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453672932113_-925837106",
+      "id": "20160124-140212_1972567109",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import java.io.File\nimport scala.io.Source\nimport org.apache.log4j.Logger\nimport org.apache.log4j.Level\nimport org.apache.spark.SparkConf\nimport org.apache.spark.SparkContext\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\nimport org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationModel}\n"
+      },
+      "dateCreated": "Jan 24, 2016 2:02:12 PM",
+      "dateStarted": "Jan 24, 2016 4:46:02 PM",
+      "dateFinished": "Jan 24, 2016 4:46:05 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.nd4j.linalg.factory.Nd4j;\nimport org.nd4s.Implicits._;\nimport org.nd4j.linalg.api.ndarray.INDArray;\nimport org.nd4j.linalg.dataset.DataSet;\nimport org.nd4j.linalg.dataset.api.DataSetPreProcessor;\nimport org.nd4j.linalg.factory.Nd4j;\nimport org.nd4j.linalg.lossfunctions.LossFunctions;",
+      "dateUpdated": "Jan 24, 2016 4:46:06 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453673567315_-346087267",
+      "id": "20160124-141247_1575602377",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "import org.nd4j.linalg.factory.Nd4j\nimport org.nd4s.Implicits._\nimport org.nd4j.linalg.api.ndarray.INDArray\nimport org.nd4j.linalg.dataset.DataSet\nimport org.nd4j.linalg.dataset.api.DataSetPreProcessor\nimport org.nd4j.linalg.factory.Nd4j\nimport org.nd4j.linalg.lossfunctions.LossFunctions\n"
+      },
+      "dateCreated": "Jan 24, 2016 2:12:47 PM",
+      "dateStarted": "Jan 24, 2016 4:46:06 PM",
+      "dateFinished": "Jan 24, 2016 4:46:08 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val sampleFile  \u003d \"/Users/marvinbertin/Desktop/sample/part-0.csv\"\n\nval data \u003d sc.textFile(new File(sampleFile).toString)\n    .mapPartitionsWithIndex { (idx, iter) \u003d\u003e if (idx \u003d\u003d 0) iter.drop(1) else iter }\n    .map { line \u003d\u003e\n  val fields \u003d line.split(\",\")\n  // format: (userId, MID, Rating)\n  Array(fields(0).toInt, fields(1).toInt,fields(2).toInt).toNDArray\n}",
+      "dateUpdated": "Jan 24, 2016 4:48:15 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453674113577_-1656175885",
+      "id": "20160124-142153_1389001930",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "sampleFile: String \u003d /Users/marvinbertin/Desktop/sample/part-0.csv\ndata: org.apache.spark.rdd.RDD[org.nd4j.linalg.api.ndarray.INDArray] \u003d MapPartitionsRDD[52] at map at \u003cconsole\u003e:104\n"
+      },
+      "dateCreated": "Jan 24, 2016 2:21:53 PM",
+      "dateStarted": "Jan 24, 2016 4:48:15 PM",
+      "dateFinished": "Jan 24, 2016 4:48:15 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "data.take(1)",
+      "dateUpdated": "Jan 24, 2016 4:47:43 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453682549049_-2035015478",
+      "id": "20160124-164229_545554410",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "res95: Array[org.nd4j.linalg.api.ndarray.INDArray] \u003d Array([ 111,615.00, 7,879.00, 2.00])\n"
+      },
+      "dateCreated": "Jan 24, 2016 4:42:29 PM",
+      "dateStarted": "Jan 24, 2016 4:47:43 PM",
+      "dateFinished": "Jan 24, 2016 4:47:43 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val numRatings \u003d data.count.toInt\nval numUsers \u003d data.map(s \u003d\u003e s(0)).distinct.count.toInt\nval numMovies \u003d data.map(s \u003d\u003e s(1)).distinct.count.toInt\n\nprintln(\"Got \" + numRatings + \" ratings from \"\n  + numUsers + \" users on \" + numMovies + \" movies.\")",
+      "dateUpdated": "Jan 24, 2016 4:49:26 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453682607949_95197975",
+      "id": "20160124-164327_1898834904",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "numRatings: Int \u003d 1510\nnumUsers: Int \u003d 1342\nnumMovies: Int \u003d 829\nGot 1510 ratings from 1342 users on 829 movies.\n"
+      },
+      "dateCreated": "Jan 24, 2016 4:43:27 PM",
+      "dateStarted": "Jan 24, 2016 4:49:26 PM",
+      "dateFinished": "Jan 24, 2016 4:49:28 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val users \u003d data.map(s \u003d\u003e s(0)).distinct.zipWithIndex.toArray.toMap\nval movies \u003d data.map(s \u003d\u003e s(1)).distinct.zipWithIndex.toArray.toMap",
+      "dateUpdated": "Jan 24, 2016 4:57:59 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453682966806_-1054707050",
+      "id": "20160124-164926_498733739",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "warning: there were 1 deprecation warning(s); re-run with -deprecation for details\nusers: scala.collection.immutable.Map[Double,Long] \u003d Map(1570833.0 -\u003e 1017, 2310565.0 -\u003e 677, 91071.0 -\u003e 323, 2024298.0 -\u003e 868, 83720.0 -\u003e 113, 2274152.0 -\u003e 900, 739277.0 -\u003e 365, 1081134.0 -\u003e 197, 759729.0 -\u003e 344, 974375.0 -\u003e 78, 2405965.0 -\u003e 580, 2041533.0 -\u003e 1244, 85562.0 -\u003e 691, 763194.0 -\u003e 657, 193148.0 -\u003e 802, 1812758.0 -\u003e 666, 2613757.0 -\u003e 801, 1498129.0 -\u003e 1004, 2635599.0 -\u003e 979, 1404157.0 -\u003e 1131, 1418865.0 -\u003e 1306, 1240243.0 -\u003e 1076, 1730900.0 -\u003e 371, 574063.0 -\u003e 612, 2208595.0 -\u003e 1167, 942790.0 -\u003e 479, 2020938.0 -\u003e 752, 2361318.0 -\u003e 1338, 1343262.0 -\u003e 187, 123392.0 -\u003e 373, 1811452.0 -\u003e 717, 123070.0 -\u003e 326, 472831.0 -\u003e 570, 238550.0 -\u003e 518, 718808.0 -\u003e 812, 1554186.0 -\u003e 876, 2228818.0 -\u003e 966, 1905595.0 -\u003e 1010, 383154.0 -\u003e 609, 272025.0 -\u003e 157, 2331728.0 -\u003e 685, 1625290.0 -\u003e 8...warning: there were 1 deprecation warning(s); re-run with -deprecation for details\nmovies: scala.collection.immutable.Map[Double,Long] \u003d Map(3021.0 -\u003e 651, 5686.0 -\u003e 569, 14852.0 -\u003e 262, 9131.0 -\u003e 196, 6085.0 -\u003e 610, 2452.0 -\u003e 167, 809.0 -\u003e 692, 3962.0 -\u003e 346, 7427.0 -\u003e 248, 629.0 -\u003e 556, 2612.0 -\u003e 562, 14367.0 -\u003e 572, 15009.0 -\u003e 738, 13854.0 -\u003e 64, 11192.0 -\u003e 582, 3798.0 -\u003e 429, 12526.0 -\u003e 703, 15440.0 -\u003e 451, 14574.0 -\u003e 772, 16604.0 -\u003e 494, 7922.0 -\u003e 261, 15472.0 -\u003e 169, 13058.0 -\u003e 129, 11164.0 -\u003e 815, 9685.0 -\u003e 462, 11752.0 -\u003e 718, 2595.0 -\u003e 94, 468.0 -\u003e 747, 13302.0 -\u003e 329, 5778.0 -\u003e 768, 14822.0 -\u003e 349, 14358.0 -\u003e 72, 5582.0 -\u003e 379, 88.0 -\u003e 68, 9032.0 -\u003e 5, 14419.0 -\u003e 294, 6808.0 -\u003e 333, 12500.0 -\u003e 564, 4043.0 -\u003e 97, 14296.0 -\u003e 105, 7040.0 -\u003e 8, 1406.0 -\u003e 458, 7083.0 -\u003e 300, 11256.0 -\u003e 619, 13007.0 -\u003e 345, 3905.0 -\u003e 191, 13177.0 -\u003e 374, 15671.0 -\u003e 223, 12084.0 -\u003e..."
+      },
+      "dateCreated": "Jan 24, 2016 4:49:26 PM",
+      "dateStarted": "Jan 24, 2016 4:57:59 PM",
+      "dateFinished": "Jan 24, 2016 4:58:00 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "object ALS {\n\n  def train(ratings: RDD[Rating], rank: Int, iterations: Int, lambda: Double)\n    : MatrixFactorizationModel \u003d {\n    val ranks \u003d List(8, 12)\n    val lambdas \u003d List(1.0, 10.0)\n    val numIters \u003d List(10, 20)\n    var bestModel: Option[MatrixFactorizationModel] \u003d None\n    var bestValidationRmse \u003d Double.MaxValue\n    var bestRank \u003d 0\n    var bestLambda \u003d -1.0\n    var bestNumIter \u003d -1\n    for (rank \u003c- ranks; lambda \u003c- lambdas; numIter \u003c- numIters) {\n      val model \u003d ALS.train(training, rank, numIter, lambda)\n      val validationRmse \u003d computeRmse(model, validation, numValidation)\n      println(\"RMSE (validation) \u003d \" + validationRmse + \" for the model trained with rank \u003d \"\n        + rank + \", lambda \u003d \" + lambda + \", and numIter \u003d \" + numIter + \".\")\n      if (validationRmse \u003c bestValidationRmse) {\n        bestModel \u003d Some(model)\n        bestValidationRmse \u003d validationRmse\n        bestRank \u003d rank\n        bestLambda \u003d lambda\n        bestNumIter \u003d numIter\n      }\n    }\n\n    val testRmse \u003d computeRmse(bestModel.get, test, numTest)\n\n    println(\"The best model was trained with rank \u003d \" + bestRank + \" and lambda \u003d \" + bestLambda\n      + \", and numIter \u003d \" + bestNumIter + \", and its RMSE on the test set is \" + testRmse + \".\")\n  }\n}",
+      "dateUpdated": "Jan 24, 2016 5:03:02 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1453683479321_-1820437271",
+      "id": "20160124-165759_1277647686",
+      "dateCreated": "Jan 24, 2016 4:57:59 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Collaborative Filtering Movie Recommeder",
+  "id": "2BCHCS1FH",
+  "angularObjects": {
+    "2BBDE3QQ6": [],
+    "2B9FHC4AV": [],
+    "2B9PR86US": [],
+    "2B914NQXN": [],
+    "2B9DZ3R1A": [],
+    "2BAXDP855": [],
+    "2BA7ZR9GJ": [],
+    "2B9GPHSCZ": [],
+    "2B9DS7SFC": [],
+    "2BB7AZKT1": [],
+    "2BC4VX7TX": [],
+    "2BAY45DAS": [],
+    "2B9RTK15K": [],
+    "2B9TNSKC1": []
+  },
+  "config": {},
+  "info": {}
+}
