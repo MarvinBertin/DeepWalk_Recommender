@@ -1,0 +1,11 @@
+ssh -i ~/.ssh/gu-recco.pem ec2-user@ec2-54-201-96-171.us-west-2.compute.amazonaws.com
+
+sudo su
+
+docker exec -i -t 492e8191b0f3 bash
+
+spark-notebook-0.6.2-scala-2.11.7-spark-1.6.0-hadoop-2.6.0/bin/spark-notebook -Dhttp.port=22
+
+^Commands to launch spark notebook on server
+ 
+then you can login @ http://ec2-54-201-96-171.us-west-2.compute.amazonaws.com:32781/
