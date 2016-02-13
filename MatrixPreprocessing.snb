@@ -1,0 +1,487 @@
+{
+  "metadata" : {
+    "name" : "MatrixPreprocessing",
+    "user_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "auto_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "language_info" : {
+      "name" : "scala",
+      "file_extension" : "scala",
+      "codemirror_mode" : "text/x-scala"
+    },
+    "trusted" : true,
+    "customLocalRepo" : null,
+    "customRepos" : null,
+    "customDeps" : null,
+    "customImports" : null,
+    "customArgs" : null,
+    "customSparkConf" : null
+  },
+  "cells" : [ {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : ":dp\norg.apache.spark % spark-mllib_2.10 % 1.2.1\norg.scalanlp % breeze_2.10 % 0.12\n- org.apache.spark % spark-core_2.10 % _\n- org.apache.hadoop % _ % _",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "warning: there were four feature warnings; re-run with -feature for details\nglobalScope.jars: Array[String] = [Ljava.lang.String;@ad221b1\nres57: List[String] = List(/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/scalanlp/breeze_2.10/0.10/breeze_2.10-0.10.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/commons/commons-math3/3.1.1/commons-math3-3.1.1.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/codehaus/jackson/jackson-mapper-asl/1.8.8/jackson-mapper-asl-1.8.8.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/jblas/jblas/1.2.3/jblas-1.2.3.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000g..."
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anonc6a7e40b1d353f72139db304aa8a8709&quot;,&quot;dataInit&quot;:[{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/scalanlp/breeze_2.10/0.10/breeze_2.10-0.10.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/commons/commons-math3/3.1.1/commons-math3-3.1.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/codehaus/jackson/jackson-mapper-asl/1.8.8/jackson-mapper-asl-1.8.8.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/jblas/jblas/1.2.3/jblas-1.2.3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/eclipse/jetty/jetty-server/8.1.14.v20131031/jetty-server-8.1.14.v20131031.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/twitter/parquet-common/1.6.0rc3/parquet-common-1.6.0rc3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/codehaus/jackson/jackson-core-asl/1.9.11/jackson-core-asl-1.9.11.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/spire-math/spire-macros_2.10/0.7.4/spire-macros_2.10-0.7.4.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/scalamacros/quasiquotes_2.10/2.0.1/quasiquotes_2.10-2.0.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/eclipse/jetty/jetty-io/8.1.14.v20131031/jetty-io-8.1.14.v20131031.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/github/rwl/jtransforms/2.4.0/jtransforms-2.4.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/twitter/parquet-jackson/1.6.0rc3/parquet-jackson-1.6.0rc3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/spark/spark-catalyst_2.10/1.2.1/spark-catalyst_2.10-1.2.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/fasterxml/jackson/core/jackson-core/2.3.0/jackson-core-2.3.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/github/fommil/netlib/core/1.1.2/core-1.1.2.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/fasterxml/jackson/core/jackson-databind/2.3.0/jackson-databind-2.3.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/net/sourceforge/f2j/arpack_combined_all/0.1/arpack_combined_all-0.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/twitter/parquet-hadoop/1.6.0rc3/parquet-hadoop-1.6.0rc3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/fasterxml/jackson/core/jackson-annotations/2.3.0/jackson-annotations-2.3.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/spark/spark-mllib_2.10/1.2.1/spark-mllib_2.10-1.2.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/spark/spark-streaming_2.10/1.2.1/spark-streaming_2.10-1.2.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/com/twitter/parquet-generator/1.6.0rc3/parquet-generator-1.6.0rc3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/apache/spark/spark-sql_2.10/1.2.1/spark-sql_2.10-1.2.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/8d23a3ae-77dd-4cfe-8e31-6d5e46e38403/org/spark-project/spark/unused/1.0.0/unused-1.0.0.jar&quot;}],&quot;genId&quot;:&quot;10872382&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"string value\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon3aa475fbf1969ca4339bcafbc68c72c7\">\n      Max Points\n    </label><input id=\"input-anon3aa475fbf1969ca4339bcafbc68c72c7\" type=\"number\" name=\"input-anon3aa475fbf1969ca4339bcafbc68c72c7\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon3aa475fbf1969ca4339bcafbc68c72c7\" data-this=\"{&quot;valueId&quot;:&quot;anon3aa475fbf1969ca4339bcafbc68c72c7&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anonbd44f7430de7f8f6d2dadc3a5831aa51&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon83165bd51283ad371e96616b9632ea8d&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 93
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "import org.apache.spark._\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\nimport org.apache.spark.mllib.linalg.distributed.{CoordinateMatrix, MatrixEntry, BreezeMatrixConversionSuite}\nimport org.apache.spark.mllib.recommendation.Rating",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "<console>:87: error: object BreezeMatrixConversionSuite is not a member of package org.apache.spark.mllib.linalg.distributed\n       import org.apache.spark.mllib.linalg.distributed.{CoordinateMatrix, MatrixEntry, BreezeMatrixConversionSuite}\n              ^\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val data = sc.textFile(\"data/data.txt\")\nval ratings = data.map(_.split(',') match { case Array(user, item, rate) =>\n    Rating(user.toInt, item.toInt, rate.toInt)\n  })",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "data: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[1] at textFile at <console>:85\nratings: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[2] at map at <console>:86\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "MapPartitionsRDD[2] at map at &lt;console&gt;:86"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 95
+    } ]
+  }, {
+    "metadata" : { },
+    "cell_type" : "markdown",
+    "source" : "## Train, Test Split"
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val splits = ratings.randomSplit(Array(0.7,0.15, 0.15), seed = 11L)\nval train = splits(0).cache\nval validation = splits(1)\nval test = splits(2)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "splits: Array[org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating]] = Array(MapPartitionsRDD[3] at randomSplit at <console>:90, MapPartitionsRDD[4] at randomSplit at <console>:90, MapPartitionsRDD[5] at randomSplit at <console>:90)\ntrain: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[3] at randomSplit at <console>:90\nvalidation: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[4] at randomSplit at <console>:90\ntest: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[5] at randomSplit at <console>:90\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "MapPartitionsRDD[5] at randomSplit at &lt;console&gt;:90"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 96
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "train.take(15)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res58: Array[org.apache.spark.mllib.recommendation.Rating] = Array(Rating(1,1,3.0), Rating(2,1,4.0), Rating(5,2,4.0), Rating(6,4,2.0), Rating(7,4,5.0), Rating(8,2,5.0), Rating(9,3,1.0), Rating(12,1,4.0), Rating(13,2,5.0), Rating(14,3,1.0), Rating(16,4,2.0), Rating(19,3,1.0))\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anond36524b5039e1ce5a534ac558689b3a4&quot;,&quot;dataInit&quot;:[{&quot;user&quot;:1,&quot;product&quot;:1,&quot;rating&quot;:3.0},{&quot;user&quot;:2,&quot;product&quot;:1,&quot;rating&quot;:4.0},{&quot;user&quot;:5,&quot;product&quot;:2,&quot;rating&quot;:4.0},{&quot;user&quot;:6,&quot;product&quot;:4,&quot;rating&quot;:2.0},{&quot;user&quot;:7,&quot;product&quot;:4,&quot;rating&quot;:5.0},{&quot;user&quot;:8,&quot;product&quot;:2,&quot;rating&quot;:5.0},{&quot;user&quot;:9,&quot;product&quot;:3,&quot;rating&quot;:1.0},{&quot;user&quot;:12,&quot;product&quot;:1,&quot;rating&quot;:4.0},{&quot;user&quot;:13,&quot;product&quot;:2,&quot;rating&quot;:5.0},{&quot;user&quot;:14,&quot;product&quot;:3,&quot;rating&quot;:1.0},{&quot;user&quot;:16,&quot;product&quot;:4,&quot;rating&quot;:2.0},{&quot;user&quot;:19,&quot;product&quot;:3,&quot;rating&quot;:1.0}],&quot;genId&quot;:&quot;1769992623&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"user\",\"product\",\"rating\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anonae3f3f5b335524dc95e5ec592ebc8898\">\n      Max Points\n    </label><input id=\"input-anonae3f3f5b335524dc95e5ec592ebc8898\" type=\"number\" name=\"input-anonae3f3f5b335524dc95e5ec592ebc8898\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anonae3f3f5b335524dc95e5ec592ebc8898\" data-this=\"{&quot;valueId&quot;:&quot;anonae3f3f5b335524dc95e5ec592ebc8898&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon0d02e74aa21f9e7c9084976cee34a339&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anona6e5c78e7ba8393011e1e349972d1b2c&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 97
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "validation.take(10)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res59: Array[org.apache.spark.mllib.recommendation.Rating] = Array(Rating(3,2,5.0), Rating(4,3,1.0), Rating(11,1,3.0), Rating(15,2,4.0), Rating(18,2,5.0), Rating(20,1,3.0))\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anonc1d6cbb6c13eb3df5e748f85ed08e7f0&quot;,&quot;dataInit&quot;:[{&quot;user&quot;:3,&quot;product&quot;:2,&quot;rating&quot;:5.0},{&quot;user&quot;:4,&quot;product&quot;:3,&quot;rating&quot;:1.0},{&quot;user&quot;:11,&quot;product&quot;:1,&quot;rating&quot;:3.0},{&quot;user&quot;:15,&quot;product&quot;:2,&quot;rating&quot;:4.0},{&quot;user&quot;:18,&quot;product&quot;:2,&quot;rating&quot;:5.0},{&quot;user&quot;:20,&quot;product&quot;:1,&quot;rating&quot;:3.0}],&quot;genId&quot;:&quot;449835185&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"user\",\"product\",\"rating\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anonff2cc4b7311e61207553f2c900ce69b1\">\n      Max Points\n    </label><input id=\"input-anonff2cc4b7311e61207553f2c900ce69b1\" type=\"number\" name=\"input-anonff2cc4b7311e61207553f2c900ce69b1\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anonff2cc4b7311e61207553f2c900ce69b1\" data-this=\"{&quot;valueId&quot;:&quot;anonff2cc4b7311e61207553f2c900ce69b1&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anone72a237c9d0c6c5213aa08b367a678b3&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anonebbbc794b38dfcf05e65142f64dd1f3a&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 98
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val numUser = train.map(x => x.user).distinct.count.toInt\nval numMovie = train.map(x => x.product).distinct.count.toInt",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "numUser: Int = 12\nnumMovie: Int = 4\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "4"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 187
+    } ]
+  }, {
+    "metadata" : { },
+    "cell_type" : "markdown",
+    "source" : "## Global Mean & Variance"
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val Mmean = train.map(x => x.rating).mean\nval Mstd = train.map(x => x.rating).stdev",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Mmean: Double = 3.0833333333333335\nMstd: Double = 1.552328000849763\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "1.552328000849763"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 150
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val M = new CoordinateMatrix(train.map {\n    case Rating(user, movie, rating) => MatrixEntry(user, movie, (rating - Mmean) / Mstd)\n})",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "M: org.apache.spark.mllib.linalg.distributed.CoordinateMatrix = org.apache.spark.mllib.linalg.distributed.CoordinateMatrix@1868d31a\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.spark.mllib.linalg.distributed.CoordinateMatrix@1868d31a"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 151
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "M.entries.take(10)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res98: Array[org.apache.spark.mllib.linalg.distributed.MatrixEntry] = Array(MatrixEntry(1,1,-0.053682812709501995), MatrixEntry(2,1,0.5905109398045207), MatrixEntry(5,2,0.5905109398045207), MatrixEntry(6,4,-0.6978765652235248), MatrixEntry(7,4,1.2347046923185436), MatrixEntry(8,2,1.2347046923185436), MatrixEntry(9,3,-1.3420703177375475), MatrixEntry(12,1,0.5905109398045207), MatrixEntry(13,2,1.2347046923185436), MatrixEntry(14,3,-1.3420703177375475))\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon931234d6cbfac4c128863ea73dd634d2&quot;,&quot;dataInit&quot;:[{&quot;i&quot;:1,&quot;j&quot;:1,&quot;value&quot;:-0.053682812709501995},{&quot;i&quot;:2,&quot;j&quot;:1,&quot;value&quot;:0.5905109398045207},{&quot;i&quot;:5,&quot;j&quot;:2,&quot;value&quot;:0.5905109398045207},{&quot;i&quot;:6,&quot;j&quot;:4,&quot;value&quot;:-0.6978765652235248},{&quot;i&quot;:7,&quot;j&quot;:4,&quot;value&quot;:1.2347046923185436},{&quot;i&quot;:8,&quot;j&quot;:2,&quot;value&quot;:1.2347046923185436},{&quot;i&quot;:9,&quot;j&quot;:3,&quot;value&quot;:-1.3420703177375475},{&quot;i&quot;:12,&quot;j&quot;:1,&quot;value&quot;:0.5905109398045207},{&quot;i&quot;:13,&quot;j&quot;:2,&quot;value&quot;:1.2347046923185436},{&quot;i&quot;:14,&quot;j&quot;:3,&quot;value&quot;:-1.3420703177375475}],&quot;genId&quot;:&quot;790852774&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"i\",\"j\",\"value\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon6e132eed969f0e69660462f178f28eb5\">\n      Max Points\n    </label><input id=\"input-anon6e132eed969f0e69660462f178f28eb5\" type=\"number\" name=\"input-anon6e132eed969f0e69660462f178f28eb5\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon6e132eed969f0e69660462f178f28eb5\" data-this=\"{&quot;valueId&quot;:&quot;anon6e132eed969f0e69660462f178f28eb5&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon31f9618a13547658ea763ccc675d5b75&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anonc534ecfa3f72d5fb02f2486a1e22e3b9&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 153
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val Mr = M.toIndexedRowMatrix\nval Mt = M.transpose.toIndexedRowMatrix",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Mr: org.apache.spark.mllib.linalg.distributed.IndexedRowMatrix = org.apache.spark.mllib.linalg.distributed.IndexedRowMatrix@1b8ef9f7\nMt: org.apache.spark.mllib.linalg.distributed.IndexedRowMatrix = org.apache.spark.mllib.linalg.distributed.IndexedRowMatrix@582d68b7\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.spark.mllib.linalg.distributed.IndexedRowMatrix@582d68b7"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 154
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "println(Mr.numRows, Mr.numCols)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "(20,5)\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 155
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val IM = Mr.computeGramianMatrix",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "IM: org.apache.spark.mllib.linalg.Matrix =\n0.0  0.0                 0.0                 0.0                0.0\n0.0  0.7002881844380402  0.0                 0.0                0.0\n0.0  0.0                 3.3976945244956775  0.0                0.0\n0.0  0.0                 0.0                 5.403458213256485  0.0\n0.0  0.0                 0.0                 0.0                2.498559077809799\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "0.0  0.0                 0.0                 0.0                0.0                \n0.0  0.7002881844380402  0.0                 0.0                0.0                \n0.0  0.0                 3.3976945244956775  0.0                0.0                \n0.0  0.0                 0.0                 5.403458213256485  0.0                \n0.0  0.0                 0.0                 0.0                2.498559077809799  "
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 156
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "println(Mt.numRows, Mt.numCols)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "(5,20)\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 157
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val UM = Mt.computeGramianMatrix",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "UM: org.apache.spark.mllib.linalg.Matrix =\n0.0  0.0                   0.0                  0.0  0.0  ... (20 total)\n0.0  0.002881844380403469  -0.0317002881844381  0.0  0.0  ...\n0.0  -0.0317002881844381   0.34870317002881834  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ......"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "0.0  0.0                   0.0                  0.0  0.0  ... (20 total)\n0.0  0.002881844380403469  -0.0317002881844381  0.0  0.0  ...\n0.0  -0.0317002881844381   0.34870317002881834  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  -0.0317002881844381   0.34870317002881834  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ...\n0.0  0.0                   0.0                  0.0  0.0  ..."
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 158
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val Ms = M.toRowMatrix",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Ms: org.apache.spark.mllib.linalg.distributed.RowMatrix = org.apache.spark.mllib.linalg.distributed.RowMatrix@74e36801\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.spark.mllib.linalg.distributed.RowMatrix@74e36801"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 159
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val stats = Ms.computeColumnSummaryStatistics",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "stats: org.apache.spark.mllib.stat.MultivariateStatisticalSummary = org.apache.spark.mllib.stat.MultivariateOnlineSummarizer@194d2c53\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.spark.mllib.stat.MultivariateOnlineSummarizer@194d2c53"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 160
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "stats.mean",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res101: org.apache.spark.mllib.linalg.Vector = [0.0,0.0939449222416283,0.254993360370134,-0.33551757943438687,-0.013420703177375481]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "[0.0,0.0939449222416283,0.254993360370134,-0.33551757943438687,-0.013420703177375481]"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 161
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "stats.variance",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res82: org.apache.spark.mllib.linalg.Vector = [0.0,2.8106060606060606,4.515151515151516,0.20454545454545456,2.3863636363636362]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "[0.0,2.8106060606060606,4.515151515151516,0.20454545454545456,2.3863636363636362]"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 131
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "stats.numNonzeros",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res84: org.apache.spark.mllib.linalg.Vector = [0.0,3.0,3.0,3.0,3.0]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "[0.0,3.0,3.0,3.0,3.0]"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 133
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// symmetric matrix only need to loop over triangle matrix\nval combinations = sc.parallelize(\n  for {\n    i <- 0 until numMovie\n    j <- 0 to i\n} yield (i, j))",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "combinations: org.apache.spark.rdd.RDD[(Int, Int)] = ParallelCollectionRDD[147] at parallelize at <console>:100\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "ParallelCollectionRDD[147] at parallelize at &lt;console&gt;:100"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 348
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val edges = combinations\n  .filter(x => IM.apply(x._1, x._2) != 0)\n  .map(x => List(x._1, x._2, IM.apply(x._1, x._2)))",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "edges: org.apache.spark.rdd.RDD[List[Double]] = MapPartitionsRDD[149] at map at <console>:112\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "MapPartitionsRDD[149] at map at &lt;console&gt;:112"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 349
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "edges.map(x => x.mkString(\",\"))\n    .coalesce(1)\n    .saveAsTextFile(\"data/test\")\n// for large files use Hadoop API  FileUtil.copyMerge() ",
+    "outputs" : [ {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 351
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true
+    },
+    "cell_type" : "code",
+    "source" : "",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
+}
